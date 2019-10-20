@@ -18,12 +18,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:dev": "env-cmd -f .env.development react-scripts start",
-    "start:prod": "env-cmd -f .env.production react-scripts start",
-    "start:test": "env-cmd -f .env.test react-scripts start",
-    "build:test": "env-cmd -f .env.test react-scripts build",
-    "build:dev": "env-cmd -f .env.dev react-scripts build",
-    "build:prod": "env-cmd -f .env.prod react-scripts build"
+    "build": "react-scripts build"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { IMockConceptData } from './../models/IConcept';
+import { REACT_APP_BASEURL } from '../config';
 
 const mockSourceList = ["service1","service2","service3","service4","service5","service6","service7"]
 
@@ -7,7 +8,7 @@ const mockSourceList = ["service1","service2","service3","service4","service5","
  * Axios instance
  */
 export const APIclient = axios.create({
-    baseURL: `${process.env.REACT_APP_BASEURL}/`
+    baseURL: `${REACT_APP_BASEURL}/`
 });
 
 // Extend the response data with mock data (interceptor function)

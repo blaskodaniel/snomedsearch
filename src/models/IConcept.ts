@@ -18,3 +18,8 @@ interface Ipt {
     term: string,
     lang: string
 }
+
+export interface IMockConceptData extends IConcept{
+    score: number,
+    source: string
+}

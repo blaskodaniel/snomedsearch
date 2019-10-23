@@ -9,7 +9,7 @@ import { search } from "../../service/api-functions";
 import ResultPanel from "../ResultPanel/ResultPanel";
 import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import {IConcept} from "../../models/IConcept";
+import {IMockConceptData} from "../../models/IConcept";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const SearchPanel: React.FunctionComponent = () => {
     const classes = useStyles();
     const [searchterm, setSearchterm] = useState("");
-    const [resultdata, setResultdata] = useState<IConcept[] | null>(null)
+    const [resultdata, setResultdata] = useState<IMockConceptData[] | null>(null)
     const [loading, setLoading] = useState(false)
 
     const handleChange: any = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,7 +83,14 @@ const SearchPanel: React.FunctionComponent = () => {
                 <CircularProgress className={classes.progress} />
             </Grid> : null}
 
-            {resultdata !== null && !loading ? <ResultPanel data={resultdata} terms={searchterm} /> : null}
+            {resultdata !== null && !loading && resultdata.length !== 0 ? <ResultPanel data={resultdata} terms={searchterm} /> 
+            : 
+            resultdata !== null && resultdata.length === 0 && !loading ? <Grid container justify="center" alignItems="center">
+                <Grid item>
+                    <p>No results</p>
+                </Grid>
+            </Grid> : null
+            }
         </>
     )
 }

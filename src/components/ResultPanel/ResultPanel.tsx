@@ -168,7 +168,6 @@ const ResultPanel: React.FunctionComponent<IResultPanel> = ({ data, terms, width
                 data: __groupedlist[akt]
             })
         }
-        console.log(__groupedlist)
         setgroupedList(newlist)
         // eslint-disable-next-line
     }, [])

@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
-import { search } from "../../service/api-functions";
+import { concept } from "../../service/api-functions";
 import ResultPanel from "../ResultPanel/ResultPanel";
 import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import {IMockConceptData} from "../../models/IConcept";
+import { IMockConceptData } from "../../models/IConcept";
+import { useDelaySearch } from "../../hooks/useDelaySearch";
+import Autocomplete from "../Autocomplete/Autocomplete";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -45,18 +47,35 @@ const SearchPanel: React.FunctionComponent = () => {
     const [resultdata, setResultdata] = useState<IMockConceptData[] | null>(null)
     const [loading, setLoading] = useState(false)
 
+    const delayedSearchTerm = useDelaySearch(searchterm, 500);
+
     const handleChange: any = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchterm(event.target.value)
     }
 
-    const searchsubmit: any = async (event: React.FormEvent<HTMLInputElement>) => {
+    const startsearch: any = async () => {
         setLoading(true);
-        event.preventDefault();
-        const response = await search(searchterm);
+        const response = await concept(searchterm);
         console.log(response);
         setResultdata(response.data.items)
         setLoading(false);
     }
+
+    const searchsubmit: any = (event: React.FormEvent<HTMLInputElement>) => {
+        event.preventDefault();
+        startsearch()
+    }
+
+    useEffect(
+        () => {
+            if (delayedSearchTerm) {
+                startsearch(searchterm)
+            } else {
+                setResultdata([]);
+            }
+        },
+        [delayedSearchTerm]
+    );
 
     return (
         <>
@@ -73,23 +92,24 @@ const SearchPanel: React.FunctionComponent = () => {
                             onChange={handleChange}
                             inputProps={{ 'aria-label': 'search concept' }}
                         />
-                        <IconButton className={classes.iconButton} aria-label="search">
+                        <IconButton className={classes.iconButton} aria-label="search" onClick={startsearch}>
                             <SearchIcon />
                         </IconButton>
                     </Paper>
+                    {/* <Autocomplete value={searchterm} /> */}
                 </form>
             </Grid>
             {loading ? <Grid container justify="center" alignItems="center" className={classes.progressContainer}>
                 <CircularProgress className={classes.progress} />
             </Grid> : null}
 
-            {resultdata !== null && !loading && resultdata.length !== 0 ? <ResultPanel data={resultdata} terms={searchterm} /> 
-            : 
-            resultdata !== null && resultdata.length === 0 && !loading ? <Grid container justify="center" alignItems="center">
-                <Grid item>
-                    <p>No results</p>
-                </Grid>
-            </Grid> : null
+            {resultdata !== null && !loading && resultdata.length !== 0 ? <ResultPanel data={resultdata} terms={searchterm} />
+                :
+                resultdata !== null && resultdata.length === 0 && !loading ? <Grid container justify="center" alignItems="center">
+                    <Grid item>
+                        <p>No results</p>
+                    </Grid>
+                </Grid> : null
             }
         </>
     )

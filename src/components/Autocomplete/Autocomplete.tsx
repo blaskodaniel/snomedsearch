@@ -22,6 +22,9 @@ const useStyles = makeStyles((theme: Theme) =>
             overflow: "auto"
         },
         paddingnull: {
+            "&:hover":{
+                cursor: "pointer"
+            },
             paddingBottom: 0,
             paddingTop: 0
         },
@@ -32,12 +35,13 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface IAutocomplete {
-    value: string
+    value: string,
+    onSelect: (concept:any)=>{},
+    className: string
 }
 
-const Autocomplete: React.FunctionComponent<IAutocomplete> = ({ value }) => {
+const Autocomplete: React.FunctionComponent<IAutocomplete> = ({ value, onSelect, className }) => {
     const classes = useStyles();
-    const [searchterm, setSearchterm] = useState(value);
     const [resultdata, setResultdata] = useState<any[]>([])
 
     const startsearch: any = async () => {
@@ -47,18 +51,22 @@ const Autocomplete: React.FunctionComponent<IAutocomplete> = ({ value }) => {
 
     useEffect(
         () => {
-            startsearch()
+            console.log("value: "+value);
+            
+            if(value.trim() !== "")
+                startsearch()
+        
         },
         [value]
     );
 
     return (
         <>
-            <Grid className={classNames(classes.autocompletecontainer,{hidden:resultdata.length > 0})}>
+            <Grid className={classNames(classes.autocompletecontainer,{hidden:resultdata.length > 0}, className)}>
                 <List dense={true}>
                     {resultdata.map((x: any) => {
                         return (
-                            <ListItem className={classes.paddingnull} key={x.descriptionId}>
+                            <ListItem className={classes.paddingnull} key={x.descriptionId} onClick={()=>{onSelect(x)}}>
                                 <ListItemText
                                     primary={x.term}
                                 />

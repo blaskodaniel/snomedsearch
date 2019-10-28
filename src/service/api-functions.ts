@@ -13,6 +13,18 @@ export const concept = (query = "", limit = 50, offset = 0) => {
         });
 }
 
+// search concept by id 
+export const conceptbyid = (id: string) => {
+    const fullQuery = `${REACT_APP_EDITION}/${REACT_APP_VERSION}/concepts/${id}`
+    return APIclient.get(fullQuery)
+        .then(data => {
+            return data;
+        }).catch(function (error) {
+            // handle error
+            return error
+        });
+}
+
 // Search
 export const search = (query = "") => {
     const fullQuery = `${REACT_APP_EDITION}/${REACT_APP_VERSION}/descriptions?query=${query}&searchMode=partialMatching&lang=english&statusFilter=english&skipTo=0&returnLimit=5&normalize=true&semanticFilter=finding`

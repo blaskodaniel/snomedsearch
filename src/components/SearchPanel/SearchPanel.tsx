@@ -5,7 +5,7 @@ import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
-import { concept } from "../../service/api-functions";
+import { concept, conceptbyid } from "../../service/api-functions";
 import ResultPanel from "../ResultPanel/ResultPanel";
 import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -37,6 +37,9 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         progressContainer: {
             height: '75vh'
+        },
+        hidden:{
+            display: "none"
         }
     }),
 );
@@ -44,6 +47,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const SearchPanel: React.FunctionComponent = () => {
     const classes = useStyles();
     const [searchterm, setSearchterm] = useState("");
+    const [showautocomplete, setshowautocomplete] = useState(false)
     const [resultdata, setResultdata] = useState<IMockConceptData[] | null>(null)
     const [loading, setLoading] = useState(false)
 
@@ -51,6 +55,20 @@ const SearchPanel: React.FunctionComponent = () => {
 
     const handleChange: any = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchterm(event.target.value)
+        if(event.target.value !== ""){
+            setshowautocomplete(true)
+        }else{
+            setshowautocomplete(false)
+        }
+    }
+
+    const searchoncept: any = async (concept: any) => {
+        setLoading(true);
+        const response = await conceptbyid(concept.conceptId);
+        console.log(response);
+        setResultdata(response.data)
+        setLoading(false);
+        setshowautocomplete(false)
     }
 
     const startsearch: any = async () => {
@@ -96,7 +114,7 @@ const SearchPanel: React.FunctionComponent = () => {
                             <SearchIcon />
                         </IconButton>
                     </Paper>
-                    {/* <Autocomplete value={searchterm} /> */}
+                    <Autocomplete className={showautocomplete ? "" : classes.hidden} value={searchterm} onSelect={(concept: string)=>searchoncept(concept)} />
                 </form>
             </Grid>
             {loading ? <Grid container justify="center" alignItems="center" className={classes.progressContainer}>

@@ -14,11 +14,11 @@ const useStyles = makeStyles((theme: Theme) =>
             borderRight: "1px solid #0e0e0e26",
             borderBottom: "1px solid #0e0e0e26",
             background: "#fffffe",
-            padding: "10px",
+            padding: "0px 5px",
             marginTop: "1px",
             width: "99%",
             marginLeft: "4px",
-            maxHeight: "300px",
+            maxHeight: "207px",
             overflow: "auto"
         },
         paddingnull: {
